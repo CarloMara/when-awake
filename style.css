@@ -152,7 +152,8 @@ input:focus {
   font-size: 0.7rem;
   letter-spacing: 0.06em;
   color: var(--muted);
-  margin-bottom: 0.35rem;
+  min-height: 1.15rem;
+  margin-bottom: 0.45rem;
 }
 
 .bar {
@@ -184,8 +185,6 @@ input:focus {
 
 .now {
   position: absolute;
-  top: 0;
-  bottom: 0;
   width: 2px;
   background: var(--red);
   pointer-events: none;
@@ -197,6 +196,7 @@ input:focus {
   left: 6px;
   color: var(--red);
   font-size: 0.7rem;
+  line-height: 1;
   white-space: nowrap;
 }
 
@@ -208,7 +208,7 @@ input:focus {
 .ticks {
   display: flex;
   justify-content: space-between;
-  margin-top: 0.3rem;
+  margin-top: 0.55rem;
   font-size: 0.65rem;
   color: var(--muted);
 }

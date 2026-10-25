@@ -217,11 +217,19 @@
     els.now.classList.toggle("flip", pct > 72);
     els.nowYou.textContent = hmInZone(new Date(now), state.youTz);
     els.nowThem.textContent = hmInZone(new Date(now), themTz);
+
     const chart = els.chart.getBoundingClientRect();
-    const youTop = els.youBar.getBoundingClientRect().top - chart.top;
-    const themTop = els.themBar.getBoundingClientRect().top - chart.top;
-    els.nowYou.style.top = youTop + "px";
-    els.nowThem.style.top = themTop + "px";
+    const you = els.youBar.getBoundingClientRect();
+    const them = els.themBar.getBoundingClientRect();
+    const top = you.top - chart.top;
+    const height = them.bottom - you.top;
+    els.now.style.top = top + "px";
+    els.now.style.height = height + "px";
+    els.now.style.bottom = "auto";
+
+    const gap = 3;
+    els.nowYou.style.top = (you.top - chart.top - top - els.nowYou.offsetHeight - gap) + "px";
+    els.nowThem.style.top = (them.top - chart.top - top - els.nowThem.offsetHeight - gap) + "px";
   }
 
   function renderTicks(tickEl, winStart, winEnd, timeZone) {
