@@ -212,9 +212,15 @@
       return;
     }
     const pct = ((now - winStart) / (winEnd - winStart)) * 100;
+    const flip = pct > 78;
     els.now.hidden = false;
+    els.nowYou.hidden = false;
+    els.nowThem.hidden = false;
     els.now.style.left = pct + "%";
-    els.now.classList.toggle("flip", pct > 72);
+    els.nowYou.style.left = pct + "%";
+    els.nowThem.style.left = pct + "%";
+    els.nowYou.classList.toggle("flip", flip);
+    els.nowThem.classList.toggle("flip", flip);
     els.nowYou.textContent = hmInZone(new Date(now), state.youTz);
     els.nowThem.textContent = hmInZone(new Date(now), themTz);
 
@@ -222,14 +228,10 @@
     const you = els.youBar.getBoundingClientRect();
     const them = els.themBar.getBoundingClientRect();
     const top = you.top - chart.top;
-    const height = them.bottom - you.top;
     els.now.style.top = top + "px";
-    els.now.style.height = height + "px";
-    els.now.style.bottom = "auto";
-
-    const gap = 3;
-    els.nowYou.style.top = (you.top - chart.top - top - els.nowYou.offsetHeight - gap) + "px";
-    els.nowThem.style.top = (them.top - chart.top - top - els.nowThem.offsetHeight - gap) + "px";
+    els.now.style.height = them.bottom - you.top + "px";
+    els.nowYou.style.top = you.height / 2 + "px";
+    els.nowThem.style.top = them.top - you.top + them.height / 2 + "px";
   }
 
   function renderTicks(tickEl, winStart, winEnd, timeZone) {
@@ -272,6 +274,7 @@
     renderNow(winStart, winEnd, them.timezone);
     renderTicks(els.youTicks, winStart, winEnd, state.youTz);
     renderTicks(els.themTicks, winStart, winEnd, them.timezone);
+    els.themTicks.hidden = them.timezone === state.youTz;
 
     els.meta.textContent = both.length
       ? `both awake ${fmtRanges(both, state.youTz)} your time · ${fmtRanges(both, them.timezone)} there`
