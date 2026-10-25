@@ -178,18 +178,34 @@ input:focus {
   background: var(--night);
 }
 
-.bar-marks {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
+.chart {
+  position: relative;
 }
 
-.mark {
+.now {
   position: absolute;
-  top: 50%;
-  height: 3px;
-  margin-top: -1.5px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
   background: var(--red);
+  pointer-events: none;
+  z-index: 2;
+}
+
+.now-time {
+  position: absolute;
+  left: 6px;
+  color: var(--red);
+  font-size: 0.7rem;
+  white-space: nowrap;
+}
+
+#now-you { top: 0; }
+#now-them { bottom: 0; }
+
+.now.flip .now-time {
+  left: auto;
+  right: 6px;
 }
 
 .ticks {

@@ -9,7 +9,7 @@
 <body>
   <main>
     <h1>when awake</h1>
-    <p class="sub">red line is when you are both awake. awake is 08:00–23:00 local.</p>
+    <p class="sub">red line is now, in both timezones. awake is 08:00–23:00 local.</p>
 
     <section class="legs" aria-label="Cities">
       <div class="leg">
@@ -29,16 +29,22 @@
     <section class="result" id="result" hidden>
       <div class="meta" id="meta"></div>
 
-      <div class="timelines" aria-label="Awake hours">
-        <div class="row">
-          <div class="row-head" id="you-head">you</div>
-          <div class="bar" id="you-bar"></div>
-          <div class="ticks" id="you-ticks"></div>
+      <div class="chart" id="chart">
+        <div class="timelines" aria-label="Awake hours">
+          <div class="row">
+            <div class="row-head" id="you-head">you</div>
+            <div class="bar" id="you-bar"></div>
+            <div class="ticks" id="you-ticks"></div>
+          </div>
+          <div class="row">
+            <div class="row-head" id="them-head">them</div>
+            <div class="bar" id="them-bar"></div>
+            <div class="ticks" id="them-ticks"></div>
+          </div>
         </div>
-        <div class="row">
-          <div class="row-head" id="them-head">them</div>
-          <div class="bar" id="them-bar"></div>
-          <div class="ticks" id="them-ticks"></div>
+        <div class="now" id="now" hidden>
+          <span class="now-time" id="now-you"></span>
+          <span class="now-time" id="now-them"></span>
         </div>
       </div>
 

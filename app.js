@@ -17,6 +17,9 @@
     themHead: document.getElementById("them-head"),
     youBar: document.getElementById("you-bar"),
     themBar: document.getElementById("them-bar"),
+    now: document.getElementById("now"),
+    nowYou: document.getElementById("now-you"),
+    nowThem: document.getElementById("now-them"),
     youTicks: document.getElementById("you-ticks"),
     themTicks: document.getElementById("them-ticks"),
     status: document.getElementById("status"),
@@ -190,7 +193,7 @@
     return segs;
   }
 
-  function renderBar(barEl, segs, both, winStart, winEnd) {
+  function renderBar(barEl, segs, winStart, winEnd) {
     barEl.innerHTML = "";
     const total = winEnd - winStart;
     for (const s of segs) {
@@ -199,16 +202,20 @@
       div.style.width = ((s.end - s.start) / total) * 100 + "%";
       barEl.appendChild(div);
     }
-    const layer = document.createElement("div");
-    layer.className = "bar-marks";
-    for (const [a, b] of both) {
-      const mark = document.createElement("div");
-      mark.className = "mark";
-      mark.style.left = ((a - winStart) / total) * 100 + "%";
-      mark.style.width = ((b - a) / total) * 100 + "%";
-      layer.appendChild(mark);
+  }
+
+  function renderNow(winStart, winEnd, themTz) {
+    const now = Date.now();
+    if (now < winStart || now > winEnd) {
+      els.now.hidden = true;
+      return;
     }
-    barEl.appendChild(layer);
+    const pct = ((now - winStart) / (winEnd - winStart)) * 100;
+    els.now.hidden = false;
+    els.now.style.left = pct + "%";
+    els.now.classList.toggle("flip", pct > 72);
+    els.nowYou.textContent = hmInZone(new Date(now), state.youTz);
+    els.nowThem.textContent = hmInZone(new Date(now), themTz);
   }
 
   function renderTicks(tickEl, winStart, winEnd, timeZone) {
@@ -245,8 +252,9 @@
 
     els.youHead.textContent = "you  " + state.youTz;
     els.themHead.textContent = them.name;
-    renderBar(els.youBar, buildSegments(winStart, winEnd, youAwake), both, winStart, winEnd);
-    renderBar(els.themBar, buildSegments(winStart, winEnd, themAwake), both, winStart, winEnd);
+    renderBar(els.youBar, buildSegments(winStart, winEnd, youAwake), winStart, winEnd);
+    renderBar(els.themBar, buildSegments(winStart, winEnd, themAwake), winStart, winEnd);
+    renderNow(winStart, winEnd, them.timezone);
     renderTicks(els.youTicks, winStart, winEnd, state.youTz);
     renderTicks(els.themTicks, winStart, winEnd, them.timezone);
 
@@ -351,6 +359,9 @@
   async function init() {
     els.youPicked.textContent = `${state.youTz}\n${AWAKE[0]}–${AWAKE[1]}`;
     wire();
+    setInterval(() => {
+      if (state.them) render();
+    }, 30000);
     els.status.textContent = "loading Austin…";
     const hits = await searchCities("Austin");
     const austin =
