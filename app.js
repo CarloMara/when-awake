@@ -230,17 +230,49 @@
     const top = you.top - chart.top;
     els.now.style.top = top + "px";
     els.now.style.height = them.bottom - you.top + "px";
-    els.nowYou.style.top = you.height / 2 + "px";
-    els.nowThem.style.top = them.top - you.top + them.height / 2 + "px";
+    const youLabel = els.nowYou.offsetHeight + 2;
+    const themLabel = els.nowThem.offsetHeight + 2;
+    els.nowYou.style.top = -youLabel + "px";
+    els.nowThem.style.top = them.top - you.top - themLabel + "px";
   }
 
-  function renderTicks(tickEl, winStart, winEnd, timeZone) {
+  function dayWindow(timeZone) {
+    const now = Date.now();
+    let day = todayISOInTZ(timeZone);
+    let start = zonedTimeToUtc(day, "06:00", timeZone).getTime();
+    if (now < start) {
+      day = addDaysYmd(day, -1);
+      start = zonedTimeToUtc(day, "06:00", timeZone).getTime();
+    }
+    const end = zonedTimeToUtc(addDaysYmd(day, 1), "01:00", timeZone).getTime();
+    return [start, end];
+  }
+
+  function hourMarks(winStart, winEnd, timeZone) {
+    const from = addDaysYmd(ymdInZone(new Date(winStart), timeZone), -1);
+    const to = addDaysYmd(ymdInZone(new Date(winEnd), timeZone), 1);
+    const out = [];
+    for (const ymd of eachYmd(from, to)) {
+      for (let h = 0; h < 24; h += 3) {
+        const t = zonedTimeToUtc(ymd, pad(h) + ":00", timeZone).getTime();
+        if (t >= winStart && t <= winEnd) out.push(t);
+      }
+    }
+    out.sort((a, b) => a - b);
+    return out.filter((t, i) => i === 0 || t - out[i - 1] > 60000);
+  }
+
+  function renderTicks(tickEl, winStart, winEnd, timeZone, nowPct) {
     tickEl.innerHTML = "";
-    const n = 5;
-    for (let i = 0; i < n; i++) {
-      const t = new Date(winStart + ((winEnd - winStart) * i) / (n - 1));
+    const total = winEnd - winStart;
+    for (const t of hourMarks(winStart, winEnd, timeZone)) {
+      const pct = ((t - winStart) / total) * 100;
+      if (Math.abs(pct - nowPct) < 6) continue;
       const span = document.createElement("span");
-      span.textContent = hmInZone(t, timeZone);
+      span.style.left = pct + "%";
+      if (pct < 4) span.className = "start";
+      else if (pct > 96) span.className = "end";
+      span.textContent = hmInZone(new Date(t), timeZone);
       tickEl.appendChild(span);
     }
   }
@@ -258,22 +290,21 @@
       return;
     }
 
-    const today = todayISOInTZ(state.youTz);
-    const winStart = zonedTimeToUtc(today, "00:00", state.youTz).getTime();
-    const winEnd = zonedTimeToUtc(addDaysYmd(today, 1), "00:00", state.youTz).getTime();
+    const [winStart, winEnd] = dayWindow(state.youTz);
 
     const youAwake = awakeRanges(state.youTz, new Date(winStart), new Date(winEnd));
     const themAwake = awakeRanges(them.timezone, new Date(winStart), new Date(winEnd));
     const both = intersect(youAwake, themAwake);
 
-    els.youHead.textContent = "you  " + state.youTz;
+    els.youHead.textContent = "you";
     els.themHead.textContent = them.name;
     els.result.hidden = false;
     renderBar(els.youBar, buildSegments(winStart, winEnd, youAwake), winStart, winEnd);
     renderBar(els.themBar, buildSegments(winStart, winEnd, themAwake), winStart, winEnd);
     renderNow(winStart, winEnd, them.timezone);
-    renderTicks(els.youTicks, winStart, winEnd, state.youTz);
-    renderTicks(els.themTicks, winStart, winEnd, them.timezone);
+    const nowPct = ((Date.now() - winStart) / (winEnd - winStart)) * 100;
+    renderTicks(els.youTicks, winStart, winEnd, state.youTz, nowPct);
+    renderTicks(els.themTicks, winStart, winEnd, them.timezone, nowPct);
     els.themTicks.hidden = them.timezone === state.youTz;
 
     els.meta.textContent = both.length
