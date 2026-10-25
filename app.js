@@ -17,6 +17,7 @@
     themHead: document.getElementById("them-head"),
     youBar: document.getElementById("you-bar"),
     themBar: document.getElementById("them-bar"),
+    chart: document.getElementById("chart"),
     now: document.getElementById("now"),
     nowYou: document.getElementById("now-you"),
     nowThem: document.getElementById("now-them"),
@@ -216,6 +217,11 @@
     els.now.classList.toggle("flip", pct > 72);
     els.nowYou.textContent = hmInZone(new Date(now), state.youTz);
     els.nowThem.textContent = hmInZone(new Date(now), themTz);
+    const chart = els.chart.getBoundingClientRect();
+    const youTop = els.youBar.getBoundingClientRect().top - chart.top;
+    const themTop = els.themBar.getBoundingClientRect().top - chart.top;
+    els.nowYou.style.top = youTop + "px";
+    els.nowThem.style.top = themTop + "px";
   }
 
   function renderTicks(tickEl, winStart, winEnd, timeZone) {
@@ -252,6 +258,7 @@
 
     els.youHead.textContent = "you  " + state.youTz;
     els.themHead.textContent = them.name;
+    els.result.hidden = false;
     renderBar(els.youBar, buildSegments(winStart, winEnd, youAwake), winStart, winEnd);
     renderBar(els.themBar, buildSegments(winStart, winEnd, themAwake), winStart, winEnd);
     renderNow(winStart, winEnd, them.timezone);
@@ -262,7 +269,6 @@
       ? `both awake ${fmtRanges(both, state.youTz)} your time · ${fmtRanges(both, them.timezone)} there`
       : "no shared awake hours today";
 
-    els.result.hidden = false;
     els.status.textContent = "";
   }
 
