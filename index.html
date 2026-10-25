@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>when awake</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main>
+    <h1>when awake</h1>
+    <p class="sub">red line is when you are both awake. awake is 08:00–23:00 local.</p>
+
+    <section class="legs" aria-label="Cities">
+      <div class="leg">
+        <div class="leg-label">you</div>
+        <div class="picked ok" id="you-picked"></div>
+      </div>
+
+      <div class="leg">
+        <div class="leg-label">them</div>
+        <label class="sr-only" for="city-q">City</label>
+        <input id="city-q" type="text" autocomplete="off" spellcheck="false" placeholder="Austin" value="Austin" />
+        <ul class="suggest" id="suggest" hidden></ul>
+        <div class="picked" id="them-picked">—</div>
+      </div>
+    </section>
+
+    <section class="result" id="result" hidden>
+      <div class="meta" id="meta"></div>
+
+      <div class="timelines" aria-label="Awake hours">
+        <div class="row">
+          <div class="row-head" id="you-head">you</div>
+          <div class="bar" id="you-bar"></div>
+          <div class="ticks" id="you-ticks"></div>
+        </div>
+        <div class="row">
+          <div class="row-head" id="them-head">them</div>
+          <div class="bar" id="them-bar"></div>
+          <div class="ticks" id="them-ticks"></div>
+        </div>
+      </div>
+
+      <div class="legend">
+        <span><i class="swatch awake"></i> awake</span>
+        <span><i class="swatch asleep"></i> asleep</span>
+      </div>
+    </section>
+
+    <p class="status" id="status" role="status"></p>
+  </main>
+
+  <footer>
+    cities: <a href="https://open-meteo.com/en/docs/geocoding-api">Open-Meteo</a>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

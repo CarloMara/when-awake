@@ -1,0 +1,270 @@
+:root {
+  --bg: #1a1a1a;
+  --fg: #c8c8c8;
+  --muted: #6e6e6e;
+  --line: #3a3a3a;
+  --field: #242424;
+  --day: #b0b0b0;
+  --night: #2e2e2e;
+  --focus: #8a8a8a;
+  --red: #ff2d2d;
+  font-size: 16px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  min-height: 100%;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  line-height: 1.4;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+}
+
+main {
+  flex: 1;
+  width: min(40rem, 100%);
+  margin: 0 auto;
+  padding: 1.25rem 1rem 2rem;
+}
+
+h1 {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: lowercase;
+  color: #e0e0e0;
+}
+
+.sub {
+  margin: 0.35rem 0 1.5rem;
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+.legs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+
+.leg {
+  position: relative;
+  border: 1px solid var(--line);
+  padding: 0.75rem;
+  background: #161616;
+  min-width: 0;
+}
+
+.leg-label {
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 0.5rem;
+}
+
+input[type="text"] {
+  width: 100%;
+  margin: 0 0 0.4rem;
+  padding: 0.45rem 0.5rem;
+  border: 1px solid var(--line);
+  background: var(--field);
+  color: var(--fg);
+  font: inherit;
+  font-size: 0.85rem;
+  border-radius: 0;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+input:focus {
+  outline: 1px solid var(--focus);
+  border-color: var(--focus);
+}
+
+.picked {
+  min-height: 2.4em;
+  margin: 0;
+  font-size: 0.72rem;
+  color: var(--muted);
+  white-space: pre-line;
+  word-break: break-word;
+}
+
+.picked.ok {
+  color: var(--fg);
+}
+
+.suggest {
+  position: absolute;
+  left: 0.75rem;
+  right: 0.75rem;
+  z-index: 5;
+  margin: -0.25rem 0 0;
+  padding: 0;
+  list-style: none;
+  max-height: 12rem;
+  overflow: auto;
+  border: 1px solid var(--line);
+  background: #111;
+}
+
+.suggest li {
+  padding: 0.45rem 0.5rem;
+  font-size: 0.72rem;
+  cursor: pointer;
+  border-bottom: 1px solid #222;
+}
+
+.suggest li:hover,
+.suggest li[aria-selected="true"] {
+  background: #2a2a2a;
+}
+
+.result {
+  margin-top: 1.5rem;
+}
+
+.meta {
+  font-size: 0.8rem;
+  color: var(--muted);
+  margin-bottom: 0.85rem;
+}
+
+.timelines {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+
+.row-head {
+  font-size: 0.7rem;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+  margin-bottom: 0.35rem;
+}
+
+.bar {
+  position: relative;
+  display: flex;
+  height: 2rem;
+  width: 100%;
+  border: 1px solid var(--line);
+  overflow: hidden;
+  background: var(--night);
+}
+
+.seg {
+  height: 100%;
+  flex: none;
+}
+
+.seg.awake {
+  background: var(--day);
+}
+
+.seg.asleep {
+  background: var(--night);
+}
+
+.bar-marks {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.mark {
+  position: absolute;
+  top: 50%;
+  height: 3px;
+  margin-top: -1.5px;
+  background: var(--red);
+}
+
+.ticks {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 0.3rem;
+  font-size: 0.65rem;
+  color: var(--muted);
+}
+
+.legend {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+
+.swatch {
+  display: inline-block;
+  width: 0.85rem;
+  height: 0.85rem;
+  margin-right: 0.35rem;
+  vertical-align: -0.1rem;
+  border: 1px solid var(--line);
+}
+
+.swatch.awake { background: var(--day); }
+.swatch.asleep { background: var(--night); }
+
+.status {
+  margin-top: 1rem;
+  font-size: 0.75rem;
+  color: #9a9a9a;
+  min-height: 1.2em;
+}
+
+.status.err {
+  color: #bdbdbd;
+}
+
+footer {
+  padding: 0.75rem 1rem 1.25rem;
+  text-align: center;
+  font-size: 0.65rem;
+  color: var(--muted);
+}
+
+footer a {
+  color: #9a9a9a;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (max-width: 380px) {
+  .legs {
+    gap: 0.5rem;
+  }
+
+  .leg {
+    padding: 0.55rem;
+  }
+
+  input[type="text"] {
+    font-size: 0.78rem;
+    padding: 0.4rem;
+  }
+}
